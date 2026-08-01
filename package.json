@@ -4,7 +4,7 @@
   "description": "> API RESTful para gerenciamento de tarefas em equipe, com autenticação JWT.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/app.js"
+    "start": "nodemon ./src/server.js"
   },
   "repository": {
     "type": "git",
