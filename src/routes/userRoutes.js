@@ -1,8 +1,6 @@
-const routes = require('express').Router();
-const validateRequest = require('../middlewares/validateRequest');
-const { register } = require('../controllers/User');
-const schemaUser = require('../validations/schemaCreateUsers'); // sem chaves
+const router = require('express').Router();
+const { listUsers } = require('../controllers/userController');
 
-routes.post('/', validateRequest(schemaUser), register);
+router.get('/', listUsers);
 
-module.exports = routes;
+module.exports = router;
