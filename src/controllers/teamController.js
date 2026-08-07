@@ -36,24 +36,29 @@ const createTeam = async (req, res) => {
     }
 };
 
-
-const listTeams = async (req,res)=>{
-    
-const userId = req.userId; 
+const listTeams = async (req, res) => {
+    const userId = req.userId; // ID do usuário logado vindo do middleware JWT
 
     try {
-        const team = await Team.findById(userId).select('-password');
+        // Busca todos os times onde o userId seja o 'owner' OU esteja dentro da lista 'members'
+        const teams = await Team.find({
+            $or: [
+                { owner: userId },
+                { members: userId } // O MongoDB já sabe buscar dentro do Array automaticamente
+            ]
+        })
+        .populate('owner', 'name email')    // Traz nome e e-mail do criador
+        .populate('members', 'name email'); // Traz nome e e-mail dos membros
 
-        if (!team) {
-            return res.status(404).json({ message: 'Time  não encontrado' });
-        }
+        // Em listagens de busca, se não encontrar nada, retornamos um Array vazio [] com status 200,
+        // e não 404. O status 404 é para quando a rota de um item específico não existe.
+        return res.status(200).json(teams);
 
-        return res.status(200).json(team);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).json({ message: 'Erro interno do servidor' });
     }
-}
+};
 
 module.exports = { 
     createTeam,
